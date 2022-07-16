@@ -1,0 +1,19 @@
+:where(html) {
+  --color-gray0: #f8f9fa;
+  --color-gray1: #f1f3f5;
+  --color-gray2: #e9ecef;
+  --color-gray3: #dee2e6;
+  --color-gray4: #ced4da;
+  --color-gray5: #adb5bd;
+  --color-gray6: #868e96;
+  --color-gray7: #495057;
+  --color-gray8: #343a40;
+  --color-gray9: #212529;
+
+  --color-text-soft: var(--color-gray7);
+  --color-text-hard: var(--color-gray8);
+
+  --color-stroke-disabled: var(--color-gray2);
+  --color-stroke-divider: var(--color-gray3);
+  --color-stroke-ui: var(--color-gray4);
+}
