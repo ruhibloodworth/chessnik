@@ -3,6 +3,17 @@ import { styled } from "./stitches.config";
 const Header = styled("header", {
   textAlign: "center",
   border: "1px solid var(--color-stroke-divider)",
+  height: "5rem",
+});
+
+const Main = styled("main", {
+  height: "calc(100vh - 5rem)",
+});
+
+const Container = styled("div", {
+  backgroundColor: "red",
+  aspectRatio: "1 / 1",
+  maxHeight: "calc(100vh - 5rem)",
 });
 
 function App() {
@@ -11,7 +22,9 @@ function App() {
       <Header>
         <h1>Chessnik</h1>
       </Header>
-      <main></main>
+      <Main>
+        <Container />
+      </Main>
     </>
   );
 }
