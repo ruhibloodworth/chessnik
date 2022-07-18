@@ -1,4 +1,5 @@
 import { styled } from "./stitches.config";
+import Chessboard from "./components/Chessboard";
 
 const Header = styled("header", {
   textAlign: "center",
@@ -23,7 +24,9 @@ function App() {
         <h1>Chessnik</h1>
       </Header>
       <Main>
-        <Container />
+        <Container>
+          <Chessboard />
+        </Container>
       </Main>
     </>
   );
