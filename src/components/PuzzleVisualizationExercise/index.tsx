@@ -51,8 +51,9 @@ export default function PuzzleVisualizationExercise({
       if (moveNo + 1 <= moves.length) {
         setMoveNo(moveNo + 1);
         if (moveNo + 2 <= moves.length) {
-          await sleep(1000);
-          setMoveNo(moveNo + 2);
+          sleep(1000).then(() => {
+            setMoveNo(moveNo + 2);
+          });
         } else {
           onSuccess();
         }
