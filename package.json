@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "chess.js": "1.0.0-beta.6",
+    "chessrating": "^1.0.1",
     "react": "^18.2.0",
     "react-chessboard": "^4.1.0",
     "react-dom": "^18.2.0"

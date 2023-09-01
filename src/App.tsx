@@ -1,7 +1,8 @@
 import { Chess } from "chess.js";
+import { Player, Glicko2 } from "chessrating";
 
 import PuzzleVisualizationExercise from "./components/PuzzleVisualizationExercise";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const puzzles = [
   "00sHx,q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k - 0 17,e8d7 a2e6 d7d8 f7f8,1760,80,83,72,mate mateIn2 middlegame short,https://lichess.org/yyznGmXs/black#34,Italian_Game Italian_Game_Classical_Variation",
@@ -13,6 +14,7 @@ const puzzles = [
 const visualizedMoves = 2;
 
 export default function App() {
+  const player = useMemo(() => new Player(), []);
   const [puzzleNo, setPuzzleNo] = useState(0);
   const puzzle = puzzles[puzzleNo];
   const fields = puzzle.split(",");
@@ -26,11 +28,24 @@ export default function App() {
   }
 
   return (
-    <PuzzleVisualizationExercise
-      moves={moves}
-      fens={fens}
-      visualizedMoves={visualizedMoves}
-      onSuccess={() => setPuzzleNo(puzzleNo + 1)}
-    />
+    <>
+      <PuzzleVisualizationExercise
+        moves={moves}
+        fens={fens}
+        visualizedMoves={visualizedMoves}
+        onFinished={(won: boolean) => {
+          const puzzlePlayer = new Player(
+            parseInt(fields[3], 10),
+            parseInt(fields[4], 10),
+            0.05
+          );
+          Glicko2.executeMatch(player, puzzlePlayer, won ? 1 : 0);
+          setPuzzleNo(puzzleNo + 1);
+        }}
+      />
+      <h2>
+        {Math.round(player.rating)} +/- {Math.round(player.ratingDeviation)}
+      </h2>
+    </>
   );
 }

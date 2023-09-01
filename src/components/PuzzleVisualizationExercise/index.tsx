@@ -4,17 +4,14 @@ import MoveList from "../MoveList";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-const MoveInput: FC<{ onGuess: (guess: string) => Promise<boolean> }> = ({
-  onGuess,
-}) => {
+const MoveInput: FC<{ onGuess: (guess: string) => void }> = ({ onGuess }) => {
   const [moveStr, setMoveStr] = useState("");
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
-        if (await onGuess(moveStr)) {
-          setMoveStr("");
-        }
+        onGuess(moveStr);
+        setMoveStr("");
       }}
     >
       <input value={moveStr} onChange={(e) => setMoveStr(e.target.value)} />
@@ -26,14 +23,14 @@ interface PuzzleVisualizationExerciseProps {
   moves: string[];
   fens: string[];
   visualizedMoves: number;
-  onSuccess: () => void;
+  onFinished: (won: boolean) => void;
 }
 
 export default function PuzzleVisualizationExercise({
   moves,
   fens,
   visualizedMoves,
-  onSuccess,
+  onFinished,
 }: PuzzleVisualizationExerciseProps) {
   const [moveNo, setMoveNo] = useState(0);
   useEffect(() => {
@@ -48,19 +45,15 @@ export default function PuzzleVisualizationExercise({
 
   const handleGuessMove = async (guess: string) => {
     if (guess === moves[moveNo]) {
-      if (moveNo + 1 <= moves.length) {
-        setMoveNo(moveNo + 1);
-        if (moveNo + 2 <= moves.length) {
-          sleep(1000).then(() => {
-            setMoveNo(moveNo + 2);
-          });
-        } else {
-          onSuccess();
-        }
+      setMoveNo(moveNo + 1);
+      if (moveNo + 2 <= moves.length) {
+        await sleep(1000);
+        setMoveNo(moveNo + 2);
+      } else {
+        onFinished(true);
       }
-      return true;
     } else {
-      return false;
+      onFinished(false);
     }
   };
   return (
