@@ -2,6 +2,7 @@ import { Chess } from "chess.js";
 
 import PuzzlePosition from "./components/PuzzlePosition";
 import { useEffect, useState } from "react";
+import MoveList from "./components/MoveList";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -18,32 +19,45 @@ for (let move of moves) {
   fens.push(chess.fen());
 }
 
+const visualizedMoves = 2;
+
 export default function App() {
-  const [displayMoveNo, setDisplayMoveNo] = useState(0);
+  const [moveNo, setMoveNo] = useState(0);
   useEffect(() => {
     const firstMove = async () => {
       await sleep(1000);
-      setDisplayMoveNo(displayMoveNo + 1);
+      setMoveNo(moveNo + 1);
     };
     firstMove();
   }, []);
   return (
-    <PuzzlePosition
-      fen={fens[displayMoveNo]}
-      onGuess={async (guess) => {
-        if (guess === moves[displayMoveNo]) {
-          if (displayMoveNo + 1 <= moves.length) {
-            setDisplayMoveNo(displayMoveNo + 1);
-            if (displayMoveNo + 2 <= moves.length) {
-              await sleep(1000);
-              setDisplayMoveNo(displayMoveNo + 2);
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      <PuzzlePosition
+        fen={fens[moveNo - visualizedMoves > 0 ? moveNo - visualizedMoves : 0]}
+        onGuess={async (guess) => {
+          if (guess === moves[moveNo]) {
+            if (moveNo + 1 <= moves.length) {
+              setMoveNo(moveNo + 1);
+              if (moveNo + 2 <= moves.length) {
+                await sleep(1000);
+                setMoveNo(moveNo + 2);
+              }
             }
+            return true;
+          } else {
+            return false;
           }
-          return true;
-        } else {
-          return false;
-        }
-      }}
-    />
+        }}
+      />
+      <div>
+        <h2>Visualize</h2>
+        <MoveList
+          moves={moves.slice(0, moveNo)}
+          displayMoveNo={
+            moveNo - visualizedMoves > 0 ? moveNo - visualizedMoves : 0
+          }
+        />
+      </div>
+    </div>
   );
 }
