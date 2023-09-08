@@ -20,14 +20,13 @@ const LoadingScreen = () => (
   </>
 );
 
+const nextPuzzle = (rating: number, puzzles: Puzzle[]): Puzzle =>
+  puzzles.find((p) => Math.abs(p.rating - rating) < 100) ||
+  puzzles[Math.floor(Math.random() * puzzles.length)];
+
 const PlayingScreen: FC<{ puzzles: Puzzle[] }> = ({ puzzles }) => {
   const player = useMemo(() => new Player(), []);
-  const puzzle = useMemo(
-    () =>
-      puzzles.find((p) => Math.abs(p.rating - player.rating) < 100) ||
-      puzzles[Math.floor(Math.random() * puzzles.length)],
-    [player.rating]
-  );
+  const [puzzle, setPuzzle] = useState(nextPuzzle(player.rating, puzzles));
 
   const fens = [puzzle.fen];
   const chess = new Chess(puzzle.fen);
@@ -49,9 +48,12 @@ const PlayingScreen: FC<{ puzzles: Puzzle[] }> = ({ puzzles }) => {
             0.05
           );
           Glicko2.executeMatch(player, puzzlePlayer, won ? 1 : 0);
+          setPuzzle(nextPuzzle(player.rating, puzzles));
         }}
       />
-      <h1>{puzzle.rating}</h1>
+      <h1>
+        {puzzle.id}:{puzzle.rating}
+      </h1>
       <h2>
         {Math.round(player.rating)} +/- {Math.round(player.ratingDeviation)}
       </h2>
